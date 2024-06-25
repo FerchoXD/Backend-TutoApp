@@ -5,7 +5,7 @@ export class RegisterUserController {
     constructor(readonly registerUserUseCase:RegisterUserUseCase){}
 
     async run(req:Request, res:Response) {
-        const response = await this.registerUserUseCase.run(req.body.name, req.body.lastname, req.body.email, req.body.password);
+        const response = await this.registerUserUseCase.run(req.body.name, req.body.lastname, req.body.email, req.body.password, req.body.role);
         return res.status(response.status).json(response);
     }
 }
