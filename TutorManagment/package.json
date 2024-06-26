@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"node dist/app.js\"",
+    "dev-tutors": "tsc-watch --onSuccess \"node dist/app.js\"",
     "build": "npx tsc",
     "start": "node dist/app.js",
     "test": "jest"
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.14.6",
     "tsc-watch": "^6.0.4"
   }
 }
