@@ -1,4 +1,4 @@
-import { User, UserRole } from "../../../Domain/Entities/User";
+import { User, UserRole} from "../../../Domain/Entities/User";
 import { IUser } from "../../../Domain/Ports/IUser";
 import { UserModel } from "../../Database/Models/MySQL/UserModel";
 import bcrypt from "bcrypt";
@@ -55,7 +55,7 @@ export class UserMySQLRepository implements IUser {
             };
         }
 
-        try {
+        try {.
             const user = new User(name, lastname, email, password,role);
             user.password = await bcrypt.hash(password, 10);
     
@@ -94,13 +94,6 @@ export class UserMySQLRepository implements IUser {
     
         } catch (error) {
             console.error("Error registering user:", error);
-
-            return {
-                status: 500,
-                message: "Error registering user",
-                error: error
-            };
-        }
-    }
-
+      }
+    } 
 }
