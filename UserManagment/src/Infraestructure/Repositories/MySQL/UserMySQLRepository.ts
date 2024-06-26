@@ -3,6 +3,7 @@ import { IUser } from "../../../Domain/Ports/IUser";
 import { UserModel } from "../../Database/Models/MySQL/UserModel";
 import bcrypt from "bcrypt";
 import { JWTService } from "../../../Application/JWT/JWTService";
+import { publishToQueue } from "../../services/rabbitMQService";
 
 export class UserMySQLRepository implements IUser {    
 
@@ -53,44 +54,46 @@ export class UserMySQLRepository implements IUser {
                 message: 'El rol debe ser "tutor" o "estudiante"'
             };
         }
-    
-        const user = new User(name, lastname, email, password, role);
-    
-        return bcrypt.hash(password, 10)
-            .then(hashedPassword => {
-                user.password = hashedPassword;
-    
-                return UserModel.create({
-                    uuid: user.uuid,
-                    name: user.name,
-                    lastname: user.lastname,
-                    email: user.email,
-                    password: user.password,
-                    role: user.role
-                });
-            })
-            .then(userResponse => {
-                return {
-                    status: 201,
-                    uuid: userResponse.dataValues.uuid,
-                    type: 'users',
-                    attributes: {
-                        name: userResponse.dataValues.name,
-                        lastname: userResponse.dataValues.lastname,
-                        email: userResponse.dataValues.email,
-                        password: userResponse.dataValues.password,
-                        role: userResponse.dataValues.role
-                    }
-                };
-            })
-            .catch(error => {
-                console.error('Error registering user:', error);
-                return {
-                    status: 500,
-                    message: 'Error registering user',
-                    error: error
-                };
-            });
-    }
 
+        try {.
+            const user = new User(name, lastname, email, password,role);
+            user.password = await bcrypt.hash(password, 10);
+    
+            const userResponse = await UserModel.create({
+                uuid: user.uuid,
+                name: user.name,
+                lastname: user.lastname,
+                email: user.email,
+                password: user.password,
+                role: user.role
+            });
+    
+            await publishToQueue({
+                uuid: userResponse.uuid,
+                name: userResponse.name,
+                lastname: userResponse.lastname,
+                email: userResponse.email,
+                password: userResponse.password,
+                role: 'estudiante' 
+            });
+    
+            console.log(`Evento publicado en RabbitMQ para el usuario con UUID ${userResponse.uuid}`);
+    
+            return {
+                status: 201,
+                uuid: userResponse.uuid,
+                type: 'users',
+                attributes: {
+                    name: userResponse.name,
+                    lastname: userResponse.lastname,
+                    email: userResponse.email,
+                    password: userResponse.password,
+                    role:userResponse.role
+                }
+            };
+    
+        } catch (error) {
+            console.error("Error registering user:", error);
+      }
+    } 
 }
