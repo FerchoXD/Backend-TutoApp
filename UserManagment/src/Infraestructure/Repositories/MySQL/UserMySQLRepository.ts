@@ -1,4 +1,4 @@
-import { User, UserRole } from "../../../Domain/Entities/User";
+import { User, UserRole} from "../../../Domain/Entities/User";
 import { IUser } from "../../../Domain/Ports/IUser";
 import { UserModel } from "../../Database/Models/MySQL/UserModel";
 import bcrypt from "bcrypt";
