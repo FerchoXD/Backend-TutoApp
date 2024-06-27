@@ -22,14 +22,10 @@ export async function consumeFromQueue() {
                     if (user.role === 'estudiante') {
                         const newStudent = await StudentModel.create({
                             uuid: user.uuid,
-                            name: user.name,
-                            lastname: user.lastname,
-                            email: user.email,
-                            password: user.password,
-                            role: user.role,
                         });
 
-                        console.log(`Estudiante creado desde el evento de RabbitMQ: ${newStudent.name} ${newStudent.lastname}`);
+                        //console.log(`Estudiante creado desde el evento de RabbitMQ: ${newStudent.name} ${newStudent.lastname}`);
+                        console.log(`Estudiante creado desde el evento de RabbitMQ: ${newStudent.uuid}`);
                     } else {
                         console.log('El mensaje no es para un estudiante, ignorándolo.');
                     }

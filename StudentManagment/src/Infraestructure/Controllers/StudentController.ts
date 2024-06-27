@@ -2,7 +2,7 @@ import { StudentModel } from '../Database/Models/MySQL/StudentModel';
 
 export const createStudentFromEvent = async (data: any): Promise<void> => {
     try {
-        const { uuid, name, lastname, email, password, role } = data;
+        const { uuid} = data;
 
         const existingStudent = await StudentModel.findOne({ where: { uuid } });
 
@@ -13,14 +13,9 @@ export const createStudentFromEvent = async (data: any): Promise<void> => {
 
         const newStudent = await StudentModel.create({
             uuid,
-            name,
-            lastname,
-            email,
-            password,
-            role,
         });
 
-        console.log(`Se creó exitosamente el estudiante ${name} ${lastname}.`);
+        console.log(`Se creó exitosamente el estudiante ${uuid}.`);
 
         console.log('Datos del estudiante almacenados:', newStudent.toJSON());
 
